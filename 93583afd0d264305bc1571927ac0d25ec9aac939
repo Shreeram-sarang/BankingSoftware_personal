@@ -1,0 +1,53 @@
+BankingSoftware/src/main/java/com/banking_software/BankingSoftware/controller/BankController.java
+  a621777715414454 1-26
+BankingSoftware/src/main/java/com/banking_software/BankingSoftware/service/TransferService.java
+  a621777715414454 1-235
+BankingSoftware/src/main/java/com/banking_software/BankingSoftware/controller/AccountController.java
+  a621777715414454 1-37
+BankingSoftware/src/main/java/com/banking_software/BankingSoftware/controller/UserController.java
+  a621777715414454 1-21
+BankingSoftware/src/main/java/com/banking_software/BankingSoftware/service/IdempotencyService.java
+  a621777715414454 1-73
+BankingSoftware/src/main/java/com/banking_software/BankingSoftware/controller/TransferController.java
+  a621777715414454 1-56
+BankingSoftware/src/main/java/com/banking_software/BankingSoftware/config/LimitsConfig.java
+  a621777715414454 1-42
+BankingSoftware/src/main/java/com/banking_software/BankingSoftware/service/AccountService.java
+  a621777715414454 1-132
+BankingSoftware/src/main/java/com/banking_software/BankingSoftware/dto/IntraBankTransferRequest.java
+  a621777715414454 1-22
+BankingSoftware/src/main/java/com/banking_software/BankingSoftware/dto/TransferResponse.java
+  a621777715414454 1-16
+BankingSoftware/src/main/java/com/banking_software/BankingSoftware/dto/InterBankTransferRequest.java
+  a621777715414454 1-35
+BankingSoftware/src/main/java/com/banking_software/BankingSoftware/dto/CreateUserRequest.java
+  a621777715414454 1-22
+BankingSoftware/src/main/java/com/banking_software/BankingSoftware/service/UserService.java
+  a621777715414454 1-33
+BankingSoftware/src/main/java/com/banking_software/BankingSoftware/service/LimitService.java
+  a621777715414454 1-74
+BankingSoftware/src/main/java/com/banking_software/BankingSoftware/dto/CreateAccountRequest.java
+  a621777715414454 1-21
+BankingSoftware/src/main/java/com/banking_software/BankingSoftware/external/PaymentRailAdapter.java
+  a621777715414454 1-35
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.1.23",
+  "base_commit_sha": "93583afd0d264305bc1571927ac0d25ec9aac939",
+  "prompts": {
+    "a621777715414454": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "65fdb4ed-8a56-4cd9-ae9c-835fc7e4f1e5",
+        "model": "claude-opus-4-7"
+      },
+      "human_author": "Shreeram Bhat <shreeram.vinayak@licious.com>",
+      "messages": [],
+      "total_additions": 0,
+      "total_deletions": 0,
+      "accepted_lines": 2536,
+      "overriden_lines": 0
+    }
+  }
+}
