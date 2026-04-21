@@ -1,0 +1,79 @@
+BankingSoftware/src/main/java/com/banking_software/BankingSoftware/entity/Account.java
+  a621777715414454 1-57
+BankingSoftware/src/main/java/com/banking_software/BankingSoftware/entity/User.java
+  a621777715414454 1-68
+BankingSoftware/src/main/java/com/banking_software/BankingSoftware/entity/Transaction.java
+  a621777715414454 1-92
+BankingSoftware/src/main/java/com/banking_software/BankingSoftware/entity/Bank.java
+  a621777715414454 1-44
+BankingSoftware/src/main/java/com/banking_software/BankingSoftware/entity/AccountType.java
+  a621777715414454 1-5
+BankingSoftware/src/main/java/com/banking_software/BankingSoftware/repository/InterBankTransferRepository.java
+  a621777715414454 1-39
+BankingSoftware/src/main/java/com/banking_software/BankingSoftware/entity/ReconciliationException.java
+  a621777715414454 1-58
+BankingSoftware/src/main/java/com/banking_software/BankingSoftware/entity/KycStatus.java
+  a621777715414454 1-5
+BankingSoftware/src/main/java/com/banking_software/BankingSoftware/entity/TransferStatus.java
+  a621777715414454 1-13
+BankingSoftware/src/main/java/com/banking_software/BankingSoftware/entity/TransactionStatus.java
+  a621777715414454 1-5
+BankingSoftware/src/main/java/com/banking_software/BankingSoftware/repository/IdempotencyKeyRepository.java
+  a621777715414454 1-10
+BankingSoftware/src/main/java/com/banking_software/BankingSoftware/entity/InterBankTransfer.java
+  a621777715414454 1-91
+BankingSoftware/src/main/java/com/banking_software/BankingSoftware/repository/SettlementBatchRepository.java
+  a621777715414454 1-13
+BankingSoftware/src/main/java/com/banking_software/BankingSoftware/entity/PaymentChannel.java
+  a621777715414454 1-5
+BankingSoftware/src/main/java/com/banking_software/BankingSoftware/repository/TransactionRepository.java
+  a621777715414454 1-31
+BankingSoftware/src/main/java/com/banking_software/BankingSoftware/entity/AccountStatus.java
+  a621777715414454 1-5
+BankingSoftware/src/main/java/com/banking_software/BankingSoftware/entity/SettlementStatus.java
+  a621777715414454 1-5
+BankingSoftware/src/main/java/com/banking_software/BankingSoftware/entity/TransferFlow.java
+  a621777715414454 1-8
+BankingSoftware/src/main/java/com/banking_software/BankingSoftware/repository/UserRepository.java
+  a621777715414454 1-13
+BankingSoftware/src/main/java/com/banking_software/BankingSoftware/entity/TransactionDirection.java
+  a621777715414454 1-5
+BankingSoftware/src/main/java/com/banking_software/BankingSoftware/repository/ReconciliationExceptionRepository.java
+  a621777715414454 1-12
+BankingSoftware/src/main/java/com/banking_software/BankingSoftware/entity/IdempotencyKey.java
+  a621777715414454 1-36
+BankingSoftware/src/main/java/com/banking_software/BankingSoftware/repository/BankRepository.java
+  a621777715414454 1-11
+BankingSoftware/src/main/java/com/banking_software/BankingSoftware/entity/TransactionType.java
+  a621777715414454 1-12
+BankingSoftware/src/main/java/com/banking_software/BankingSoftware/repository/AccountRepository.java
+  a621777715414454 1-29
+BankingSoftware/src/main/java/com/banking_software/BankingSoftware/exception/BankingException.java
+  a621777715414454 1-14
+BankingSoftware/src/main/java/com/banking_software/BankingSoftware/entity/SettlementBatch.java
+  a621777715414454 1-72
+BankingSoftware/src/main/java/com/banking_software/BankingSoftware/entity/ReconciliationExceptionType.java
+  a621777715414454 1-12
+BankingSoftware/src/main/java/com/banking_software/BankingSoftware/exception/GlobalExceptionHandler.java
+  a621777715414454 1-44
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.1.23",
+  "base_commit_sha": "9e4664a18638579cfca3bc3895f96f9120505467",
+  "prompts": {
+    "a621777715414454": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "65fdb4ed-8a56-4cd9-ae9c-835fc7e4f1e5",
+        "model": "claude-opus-4-7"
+      },
+      "human_author": "Shreeram Bhat <shreeram.vinayak@licious.com>",
+      "messages": [],
+      "total_additions": 0,
+      "total_deletions": 0,
+      "accepted_lines": 3350,
+      "overriden_lines": 0
+    }
+  }
+}
