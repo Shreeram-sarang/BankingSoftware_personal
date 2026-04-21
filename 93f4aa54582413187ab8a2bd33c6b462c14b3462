@@ -1,0 +1,35 @@
+BankingSoftware/src/main/java/com/banking_software/BankingSoftware/config/ShedLockConfig.java
+  a621777715414454 1-21
+BankingSoftware/README.md
+  a621777715414454 1-75
+BankingSoftware/build.gradle
+  a621777715414454 29-33,38
+BankingSoftware/src/main/resources/application.properties
+  a621777715414454 2-16,19,21-24
+BankingSoftware/src/main/java/com/banking_software/BankingSoftware/BankingSoftwareApplication.java
+  a621777715414454 5-6,9-10
+BankingSoftware/src/main/resources/db/migration/V1__init_schema.sql
+  a621777715414454 1-170
+BankingSoftware/src/main/resources/db/migration/V2__shedlock.sql
+  a621777715414454 1-6
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.1.23",
+  "base_commit_sha": "93f4aa54582413187ab8a2bd33c6b462c14b3462",
+  "prompts": {
+    "a621777715414454": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "65fdb4ed-8a56-4cd9-ae9c-835fc7e4f1e5",
+        "model": "claude-opus-4-7"
+      },
+      "human_author": "Shreeram Bhat <shreeram.vinayak@licious.com>",
+      "messages": [],
+      "total_additions": 0,
+      "total_deletions": 0,
+      "accepted_lines": 302,
+      "overriden_lines": 0
+    }
+  }
+}
