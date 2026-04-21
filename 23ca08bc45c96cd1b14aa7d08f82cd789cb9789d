@@ -1,0 +1,51 @@
+BankingSoftware/src/main/java/com/banking_software/BankingSoftware/dto/RailStatementEntry.java
+  a621777715414454 1-21
+BankingSoftware/src/test/java/com/banking_software/BankingSoftware/ReconciliationTest.java
+  a621777715414454 1-120
+BankingSoftware/src/test/java/com/banking_software/BankingSoftware/BankingFlowTest.java
+  a621777715414454 1-231
+BankingSoftware/src/main/java/com/banking_software/BankingSoftware/dto/InboundTransferRequest.java
+  a621777715414454 1-40
+BankingSoftware/src/test/java/com/banking_software/BankingSoftware/SettlementTest.java
+  a621777715414454 1-133
+BankingSoftware/src/main/java/com/banking_software/BankingSoftware/service/ReconciliationService.java
+  a621777715414454 1-133
+BankingSoftware/src/main/java/com/banking_software/BankingSoftware/controller/SettlementController.java
+  a621777715414454 1-32
+BankingSoftware/src/test/resources/application.properties
+  a621777715414454 1-20
+BankingSoftware/src/main/java/com/banking_software/BankingSoftware/controller/ReconciliationController.java
+  a621777715414454 1-33
+BankingSoftware/src/test/java/com/banking_software/BankingSoftware/InboundTransferTest.java
+  a621777715414454 1-127
+BankingSoftware/src/main/java/com/banking_software/BankingSoftware/external/ClearingHouseAdapter.java
+  a621777715414454 1-30
+BankingSoftware/src/test/java/com/banking_software/BankingSoftware/IdempotencyAndSecurityTest.java
+  a621777715414454 1-129
+BankingSoftware/src/test/java/com/banking_software/BankingSoftware/ConcurrencyTest.java
+  a621777715414454 1-102
+BankingSoftware/src/main/java/com/banking_software/BankingSoftware/service/SettlementService.java
+  a621777715414454 1-148
+BankingSoftware/src/main/java/com/banking_software/BankingSoftware/service/HouseAccountService.java
+  a621777715414454 1-55
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.1.23",
+  "base_commit_sha": "23ca08bc45c96cd1b14aa7d08f82cd789cb9789d",
+  "prompts": {
+    "a621777715414454": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "65fdb4ed-8a56-4cd9-ae9c-835fc7e4f1e5",
+        "model": "claude-opus-4-7"
+      },
+      "human_author": "Shreeram Bhat <shreeram.vinayak@licious.com>",
+      "messages": [],
+      "total_additions": 0,
+      "total_deletions": 0,
+      "accepted_lines": 1656,
+      "overriden_lines": 0
+    }
+  }
+}
