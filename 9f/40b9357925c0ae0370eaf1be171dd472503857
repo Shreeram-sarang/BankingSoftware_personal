@@ -1,0 +1,27 @@
+BankingSoftware/src/test/java/com/banking_software/BankingSoftware/BankingFlowTest.java
+  a621777715414454 188-202
+BankingSoftware/src/main/java/com/banking_software/BankingSoftware/service/TransferService.java
+  a621777715414454 16,18,20,35,87-93,95-112,141,152,155-164,166-167,170,173,178-197,228,237,276-277,280-287
+BankingSoftware/src/test/java/com/banking_software/BankingSoftware/SettlementTest.java
+  a621777715414454 84-85,87-89
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.1.23",
+  "base_commit_sha": "9f40b9357925c0ae0370eaf1be171dd472503857",
+  "prompts": {
+    "a621777715414454": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "65fdb4ed-8a56-4cd9-ae9c-835fc7e4f1e5",
+        "model": "claude-opus-4-7"
+      },
+      "human_author": "Shreeram Bhat <shreeram.vinayak@licious.com>",
+      "messages": [],
+      "total_additions": 99,
+      "total_deletions": 28,
+      "accepted_lines": 99,
+      "overriden_lines": 0
+    }
+  }
+}
