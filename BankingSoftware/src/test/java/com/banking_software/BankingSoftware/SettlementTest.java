@@ -81,9 +81,12 @@ class SettlementTest {
                 .findFirst().orElseThrow();
         assertThat(iciciBatch.getNetAmount()).isEqualByComparingTo("5000");
 
-        // All transfers should now be SETTLED.
+        // Nothing ACKNOWLEDGED or CLEARED should remain — either SETTLED or FAILED
+        // (FAILED rows are left behind by tests that exercise rail rejection).
         List<InterBankTransfer> all = transferRepo.findAll();
-        assertThat(all).allMatch(t -> t.getStatus() == TransferStatus.SETTLED);
+        assertThat(all).allMatch(t ->
+                t.getStatus() == TransferStatus.SETTLED
+                        || t.getStatus() == TransferStatus.FAILED);
 
         // NOSTRO has been debited for every settled batch; must be <= -8500 (our three).
         Account nostro = houseAccountService.getOrCreateNostro();

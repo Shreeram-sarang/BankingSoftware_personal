@@ -185,6 +185,21 @@ class BankingFlowTest {
         // Debit should have been reversed -> balance unchanged
         Account after = accountRepo.findById(from.getId()).orElseThrow();
         assertThat(after.getBalance()).isEqualByComparingTo("10000");
+
+        // Audit trail: a FAILED InterBankTransfer row and a REVERSAL credit must
+        // persist so investigators can trace the attempt. Before the phased-commit
+        // fix these were wiped out by the transaction rollback on throw.
+        List<InterBankTransfer> failed = transferRepo.findAll().stream()
+                .filter(t -> t.getStatus() == TransferStatus.FAILED)
+                .filter(t -> t.getSourceAccount() != null
+                        && t.getSourceAccount().getId().equals(from.getId()))
+                .toList();
+        assertThat(failed).hasSize(1);
+        assertThat(failed.get(0).getFailureReason()).contains("Invalid beneficiary account");
+
+        List<Transaction> legs = txnRepo.findByTransactionRef(failed.get(0).getTransactionRef());
+        assertThat(legs).hasSize(2);
+        assertThat(legs.stream().anyMatch(l -> l.getType() == TransactionType.REVERSAL)).isTrue();
     }
 
     @Test
