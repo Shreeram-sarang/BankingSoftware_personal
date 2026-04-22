@@ -1,0 +1,25 @@
+BankingSoftware/src/main/java/com/banking_software/BankingSoftware/exception/GlobalExceptionHandler.java
+  a621777715414454 12,17-34,37-38,57-64
+BankingSoftware/src/test/java/com/banking_software/BankingSoftware/GlobalExceptionHandlerTest.java
+  a621777715414454 1-44
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.1.23",
+  "base_commit_sha": "d20bcc68affc057e50bf68a048c1722eec93a8a3",
+  "prompts": {
+    "a621777715414454": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "65fdb4ed-8a56-4cd9-ae9c-835fc7e4f1e5",
+        "model": "claude-opus-4-7"
+      },
+      "human_author": "Shreeram Bhat <shreeram.vinayak@licious.com>",
+      "messages": [],
+      "total_additions": 76,
+      "total_deletions": 2,
+      "accepted_lines": 75,
+      "overriden_lines": 0
+    }
+  }
+}
