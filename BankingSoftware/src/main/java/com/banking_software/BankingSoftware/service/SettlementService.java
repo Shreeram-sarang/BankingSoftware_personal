@@ -4,6 +4,7 @@ import com.banking_software.BankingSoftware.entity.*;
 import com.banking_software.BankingSoftware.external.ClearingHouseAdapter;
 import com.banking_software.BankingSoftware.repository.InterBankTransferRepository;
 import com.banking_software.BankingSoftware.repository.SettlementBatchRepository;
+import com.banking_software.BankingSoftware.repository.TransactionRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import net.javacrumbs.shedlock.spring.annotation.SchedulerLock;
@@ -35,6 +36,7 @@ public class SettlementService {
 
     private final InterBankTransferRepository transferRepo;
     private final SettlementBatchRepository batchRepo;
+    private final TransactionRepository txnRepo;
     private final AccountService accountService;
     private final HouseAccountService houseAccountService;
     private final ClearingHouseAdapter clearingHouse;
@@ -123,21 +125,33 @@ public class SettlementService {
             String ref = "SETTLE-" + batch.getSettlementDate() + "-"
                     + bank.getBankCode() + "-" + channel;
             BigDecimal abs = batch.getNetAmount().abs();
+            Transaction nostroLeg;
             if (sign > 0) {
-                accountService.postHouseDebit(nostro, abs, TransactionType.SETTLEMENT,
+                nostroLeg = accountService.postHouseDebit(nostro, abs, TransactionType.SETTLEMENT,
                         "Net settlement to " + bank.getName() + " via " + channel,
                         channel, ref);
             } else {
-                accountService.postCredit(nostro, abs, TransactionType.SETTLEMENT,
+                nostroLeg = accountService.postCredit(nostro, abs, TransactionType.SETTLEMENT,
                         "Net settlement from " + bank.getName() + " via " + channel,
                         channel, ref);
             }
+            nostroLeg.setSettlementBatch(batch);
+            txnRepo.save(nostroLeg);
         }
 
-        // Mark every child transfer as SETTLED and link to batch.
+        // Link every child customer-side transaction back to this batch so
+        // reports can answer "what moved in settlement X" without joining
+        // through InterBankTransfer. Then mark each transfer SETTLED.
+        LocalDateTime settledAt = LocalDateTime.now();
         for (InterBankTransfer t : transfers) {
+            for (Transaction leg : txnRepo.findByTransactionRef(t.getTransactionRef())) {
+                if (leg.getSettlementBatch() == null) {
+                    leg.setSettlementBatch(batch);
+                    txnRepo.save(leg);
+                }
+            }
             t.setStatus(TransferStatus.SETTLED);
-            t.setSettledAt(LocalDateTime.now());
+            t.setSettledAt(settledAt);
         }
         transferRepo.saveAll(transfers);
 
