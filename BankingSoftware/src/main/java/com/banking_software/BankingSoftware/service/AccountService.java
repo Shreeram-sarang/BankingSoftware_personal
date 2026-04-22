@@ -58,6 +58,7 @@ public class AccountService {
     /** Posts a credit ledger entry and updates balance. Caller must be @Transactional. */
     public Transaction postCredit(Account acc, BigDecimal amount, TransactionType type,
                                   String description, PaymentChannel channel, String ref) {
+        requirePositive(amount);
         acc.setBalance(acc.getBalance().add(amount));
         acc.setAvailableBalance(acc.getAvailableBalance().add(amount));
         accountRepo.save(acc);
@@ -79,6 +80,7 @@ public class AccountService {
     /** Posts a debit ledger entry. Caller must @Transactional and have locked the account. */
     public Transaction postDebit(Account acc, BigDecimal amount, TransactionType type,
                                  String description, PaymentChannel channel, String ref) {
+        requirePositive(amount);
         if (acc.getAvailableBalance().compareTo(amount) < 0) {
             throw new BankingException("INSUFFICIENT_FUNDS",
                     "Available balance " + acc.getAvailableBalance() + " < " + amount);
@@ -104,6 +106,7 @@ public class AccountService {
     /** Debit that ignores the availableBalance guard (house/NOSTRO accounts). */
     public Transaction postHouseDebit(Account acc, BigDecimal amount, TransactionType type,
                                       String description, PaymentChannel channel, String ref) {
+        requirePositive(amount);
         acc.setBalance(acc.getBalance().subtract(amount));
         acc.setAvailableBalance(acc.getAvailableBalance().subtract(amount));
         accountRepo.save(acc);
@@ -120,6 +123,13 @@ public class AccountService {
         t.setDescription(description);
         t.setValueDate(LocalDate.now());
         return txnRepo.save(t);
+    }
+
+    private static void requirePositive(BigDecimal amount) {
+        if (amount == null || amount.signum() <= 0) {
+            throw new BankingException("INVALID_AMOUNT",
+                    "Amount must be strictly positive (got " + amount + ")");
+        }
     }
 
     private String generateAccountNumber() {
