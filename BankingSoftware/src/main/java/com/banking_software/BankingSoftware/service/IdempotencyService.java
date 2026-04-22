@@ -2,36 +2,60 @@ package com.banking_software.BankingSoftware.service;
 
 import com.banking_software.BankingSoftware.entity.IdempotencyKey;
 import com.banking_software.BankingSoftware.exception.BankingException;
-import com.banking_software.BankingSoftware.repository.IdempotencyKeyRepository;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.RequiredArgsConstructor;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Propagation;
-import org.springframework.transaction.annotation.Transactional;
 
 import java.util.function.Supplier;
 
+/**
+ * Reserve-then-run idempotency. The reservation row is committed BEFORE
+ * the work executes, so a concurrent request with the same key hits a
+ * unique-constraint violation on insert and is deflected to replay —
+ * never both running the work and double-charging the customer.
+ */
 @Service
 @RequiredArgsConstructor
 public class IdempotencyService {
 
-    private final IdempotencyKeyRepository repo;
+    private final IdempotencyStore store;
     private final ObjectMapper objectMapper;
 
-    /**
-     * If (key, endpoint) was seen before, return the cached response (replay).
-     * Otherwise run `work`, cache the response, and return it.
-     */
     public <T> T execute(String key, String endpoint, Long userId, Class<T> type, Supplier<T> work) {
         if (key == null || key.isBlank()) {
             throw new BankingException("IDEMPOTENCY_KEY_REQUIRED",
                     "Idempotency-Key header is required");
         }
-        return repo.findByIdemKeyAndEndpoint(key, endpoint)
-                .map(existing -> replay(existing, userId, type))
-                .orElseGet(() -> runAndStore(key, endpoint, userId, type, work));
+
+        try {
+            store.reserve(key, endpoint, userId);
+        } catch (DataIntegrityViolationException dup) {
+            IdempotencyKey existing = store.find(key, endpoint)
+                    .orElseThrow(() -> new BankingException("IDEMPOTENCY_RACE",
+                            "Reservation conflict but no row found — retry"));
+            return replay(existing, userId, type);
+        }
+
+        T result;
+        try {
+            result = work.get();
+        } catch (RuntimeException e) {
+            // Work failed — release the reservation so the caller can retry.
+            store.release(key, endpoint);
+            throw e;
+        }
+
+        String json;
+        try {
+            json = objectMapper.writeValueAsString(result);
+        } catch (JsonProcessingException e) {
+            store.release(key, endpoint);
+            throw new BankingException("IDEMPOTENCY_SERIALIZE_FAILED", e.getMessage());
+        }
+        store.complete(key, endpoint, json);
+        return result;
     }
 
     private <T> T replay(IdempotencyKey existing, Long userId, Class<T> type) {
@@ -39,35 +63,14 @@ public class IdempotencyService {
             throw new BankingException("IDEMPOTENCY_KEY_CONFLICT",
                     "Idempotency-Key already used by a different user");
         }
+        if (IdempotencyStore.STATUS_PENDING.equals(existing.getStatus())) {
+            throw new BankingException("IDEMPOTENCY_IN_PROGRESS",
+                    "Idempotency-Key is reserved by an in-flight request — retry later");
+        }
         try {
             return objectMapper.readValue(existing.getResponseJson(), type);
         } catch (JsonProcessingException e) {
             throw new BankingException("IDEMPOTENCY_DESERIALIZE_FAILED", e.getMessage());
         }
-    }
-
-    @Transactional(propagation = Propagation.REQUIRES_NEW)
-    protected <T> T runAndStore(String key, String endpoint, Long userId,
-                                Class<T> type, Supplier<T> work) {
-        T result = work.get();
-        IdempotencyKey row = new IdempotencyKey();
-        row.setIdemKey(key);
-        row.setEndpoint(endpoint);
-        row.setUserId(userId);
-        row.setStatus("COMPLETED");
-        try {
-            row.setResponseJson(objectMapper.writeValueAsString(result));
-        } catch (JsonProcessingException e) {
-            throw new BankingException("IDEMPOTENCY_SERIALIZE_FAILED", e.getMessage());
-        }
-        try {
-            repo.save(row);
-        } catch (DataIntegrityViolationException race) {
-            // Concurrent first-time call with the same key — replay the stored one.
-            IdempotencyKey existing = repo.findByIdemKeyAndEndpoint(key, endpoint)
-                    .orElseThrow(() -> race);
-            return replay(existing, userId, type);
-        }
-        return result;
     }
 }

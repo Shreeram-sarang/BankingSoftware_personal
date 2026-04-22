@@ -14,6 +14,11 @@ import org.springframework.boot.test.context.SpringBootTest;
 
 import java.math.BigDecimal;
 import java.util.UUID;
+import java.util.concurrent.CountDownLatch;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+import java.util.concurrent.TimeUnit;
+import java.util.concurrent.atomic.AtomicInteger;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
@@ -117,6 +122,54 @@ class IdempotencyAndSecurityTest {
                 () -> transferService.intraBankTransfer(u2.getId(), req)))
                 .isInstanceOf(BankingException.class)
                 .hasMessageContaining("used by a different user");
+    }
+
+    @Test
+    void idempotency_concurrentRequestsSameKey_onlyOneDebitPosted() throws Exception {
+        User u1 = newUser("ic1@x.com", "9710000001");
+        User u2 = newUser("ic2@x.com", "9710000002");
+        Account from = newAccount(u1.getId(), new BigDecimal("10000"));
+        Account to = newAccount(u2.getId(), BigDecimal.ZERO);
+
+        IntraBankTransferRequest req = new IntraBankTransferRequest();
+        req.setFromAccountNumber(from.getAccountNumber());
+        req.setToAccountNumber(to.getAccountNumber());
+        req.setAmount(new BigDecimal("300"));
+
+        String key = UUID.randomUUID().toString();
+        int threads = 12;
+        ExecutorService pool = Executors.newFixedThreadPool(threads);
+        CountDownLatch start = new CountDownLatch(1);
+        CountDownLatch done = new CountDownLatch(threads);
+        AtomicInteger debitsCompleted = new AtomicInteger();
+        AtomicInteger replaysOrConflicts = new AtomicInteger();
+
+        for (int i = 0; i < threads; i++) {
+            pool.submit(() -> {
+                try {
+                    start.await();
+                    TransferResponse resp = idempotencyService.execute(
+                            key, "transfers.intra", u1.getId(), TransferResponse.class,
+                            () -> transferService.intraBankTransfer(u1.getId(), req));
+                    if (resp != null) debitsCompleted.incrementAndGet();
+                } catch (BankingException e) {
+                    // IDEMPOTENCY_IN_PROGRESS is expected while another thread
+                    // still holds the reservation — counts as "deflected".
+                    replaysOrConflicts.incrementAndGet();
+                } catch (Exception ignored) {
+                } finally {
+                    done.countDown();
+                }
+            });
+        }
+
+        start.countDown();
+        assertThat(done.await(30, TimeUnit.SECONDS)).isTrue();
+        pool.shutdown();
+
+        // Whatever the scheduling, the customer must only lose 300 ONCE.
+        Account after = accountRepo.findById(from.getId()).orElseThrow();
+        assertThat(after.getBalance()).isEqualByComparingTo("9700");
     }
 
     @Test
